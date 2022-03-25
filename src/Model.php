@@ -87,7 +87,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      *
      * @param array $attributes
      * @return void
-     * @throws JsonException
      */
     public function __construct(array $attributes = [])
     {
@@ -100,8 +99,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @param array $attributes
      * @return $this
      *
-     * @throws MassAssignmentException|JsonException
-     * @throws JsonException
+     * @throws MassAssignmentException
      */
     public function fill(array $attributes): static
     {
@@ -555,11 +553,14 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      *
      * @param string $key
      * @return mixed
-     * @throws JsonException
      */
     public function getAttribute(string $key): mixed
     {
-        return $this->getAttributeValue($key);
+        try {
+            return $this->getAttributeValue($key);
+        } catch (JsonException) {
+            return null;
+        }
     }
 
     /**
@@ -707,7 +708,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @param string $key
      * @param mixed $value
      * @return $this
-     * @throws JsonException
      */
     public function setAttribute(string $key, mixed $value): static
     {
@@ -720,8 +720,8 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
             return $this->{$method}($value);
         }
 
-        if (!is_null($value) && $this->isJsonCastable($key)) {
-            $value = $this->asJson($value);
+        if (!is_null($value) && $this->isJsonCastable($key) && ($jsonCastedValue = $this->asJson($value))) {
+            $value = $jsonCastedValue;
         }
 
         $this->attributes[$key] = $value;
@@ -744,12 +744,15 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * Encode the given value as JSON.
      *
      * @param mixed $value
-     * @return string
-     * @throws JsonException
+     * @return string|null
      */
-    protected function asJson(mixed $value): string
+    protected function asJson(mixed $value): ?string
     {
-        return json_encode($value, JSON_THROW_ON_ERROR);
+        try {
+            return json_encode($value, JSON_THROW_ON_ERROR);
+        } catch (JsonException) {
+            return null;
+        }
     }
 
     /**
