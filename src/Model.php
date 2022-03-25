@@ -362,7 +362,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @param  callable  $callback
      * @return mixed
      */
-    public static function unguarded(callable $callback): mixed
+    public static function unguarded(callable $callback)
     {
         if (static::$unguarded) {
             return $callback();
@@ -554,7 +554,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @param string $key
      * @return mixed
      */
-    public function getAttribute(string $key): mixed
+    public function getAttribute(string $key)
     {
         try {
             return $this->getAttributeValue($key);
@@ -567,10 +567,9 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * Get a plain attribute (not a relationship).
      *
      * @param string $key
-     * @return mixed
      * @throws JsonException
      */
-    protected function getAttributeValue(string $key): mixed
+    protected function getAttributeValue(string $key)
     {
         $value = $this->getAttributeFromArray($key);
 
@@ -597,7 +596,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @param string $key
      * @return mixed
      */
-    protected function getAttributeFromArray(string $key): mixed
+    protected function getAttributeFromArray(string $key)
     {
         if (array_key_exists($key, $this->attributes)) {
             return $this->attributes[$key];
@@ -619,10 +618,10 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * Get the value of an attribute using its mutator.
      *
      * @param string $key
-     * @param  mixed   $value
+     * @param mixed $value
      * @return mixed
      */
-    protected function mutateAttribute(string $key, mixed $value): mixed
+    protected function mutateAttribute(string $key, mixed $value)
     {
         return $this->{'get'.Str::studly($key).'Attribute'}($value);
     }
@@ -631,10 +630,10 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * Get the value of an attribute using its mutator for array conversion.
      *
      * @param string $key
-     * @param  mixed   $value
-     * @return mixed
+     * @param mixed $value
+     * @return array|mixed
      */
-    protected function mutateAttributeForArray(string $key, mixed $value): mixed
+    protected function mutateAttributeForArray(string $key, mixed $value)
     {
         $value = $this->mutateAttribute($key, $value);
 
@@ -684,7 +683,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @return mixed
      * @throws JsonException
      */
-    protected function castAttribute(string $key, mixed $value): mixed
+    protected function castAttribute(string $key, mixed $value)
     {
         if (is_null($value)) {
             return $value;
@@ -763,7 +762,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @return mixed
      * @throws JsonException
      */
-    public function fromJson(string $value, bool $asObject = false): mixed
+    public function fromJson(string $value, bool $asObject = false)
     {
         return json_decode($value, !$asObject, 512, JSON_THROW_ON_ERROR);
     }
@@ -878,7 +877,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @param  mixed  $offset
      * @return mixed
      */
-    public function offsetGet(mixed $offset): mixed
+    public function offsetGet(mixed $offset)
     {
         return $this->$offset;
     }
