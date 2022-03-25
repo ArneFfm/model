@@ -124,7 +124,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      *
      * @param array $attributes
      * @return $this
-     * @throws JsonException
      */
     public function forceFill(array $attributes): static
     {
@@ -158,7 +157,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      *
      * @param array $attributes
      * @return Model
-     * @throws JsonException
      */
     public function newInstance(array $attributes = []): static
     {
@@ -567,6 +565,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * Get a plain attribute (not a relationship).
      *
      * @param string $key
+     * @return bool|float|BaseCollection|int|mixed|string|null
      * @throws JsonException
      */
     protected function getAttributeValue(string $key)
@@ -772,7 +771,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      *
      * @param array|null $except
      * @return Model
-     * @throws JsonException
      */
     public function replicate(array $except = null): Model
     {
@@ -840,7 +838,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      *
      * @param string $key
      * @return mixed
-     * @throws JsonException
      */
     public function __get(string $key)
     {
@@ -853,7 +850,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @param string $key
      * @param mixed $value
      * @return void
-     * @throws JsonException
      */
     public function __set(string $key, mixed $value)
     {
@@ -877,7 +873,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @param  mixed  $offset
      * @return mixed
      */
-    public function offsetGet(mixed $offset)
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->$offset;
     }
