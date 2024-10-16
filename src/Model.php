@@ -168,7 +168,6 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      *
      * @param array $items
      * @return array
-     * @throws JsonException
      */
     public static function hydrate(array $items): array
     {
@@ -357,10 +356,11 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     /**
      * Run the given callable while being unguarded.
      *
-     * @param  callable  $callback
+     * @param callable $callback
+     *
      * @return mixed
      */
-    public static function unguarded(callable $callback)
+    public static function unguarded(callable $callback): mixed
     {
         if (static::$unguarded) {
             return $callback();
@@ -682,10 +682,10 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
      * @return mixed
      * @throws JsonException
      */
-    protected function castAttribute(string $key, mixed $value)
+    protected function castAttribute(string $key, mixed $value): mixed
     {
         if (is_null($value)) {
-            return $value;
+            return null;
         }
 
         return match ($this->getCastType($key)) {
